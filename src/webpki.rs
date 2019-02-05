@@ -232,7 +232,7 @@ impl<'a> EndEntityCert<'a> {
         &self, signature_alg: &SignatureAlgorithm, msg: untrusted::Input,
         signature: untrusted::Input,
     ) -> Result<(), Error> {
-        signed_data::verify_signature(signature_alg, self.inner.spki, msg, signature)
+        signed_data::verify_signature(signature_alg, self.inner.spki.value(), msg, signature)
     }
 }
 
