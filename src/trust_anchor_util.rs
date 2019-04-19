@@ -42,7 +42,7 @@ pub fn cert_der_as_trust_anchor(cert_der: untrusted::Input) -> Result<TrustAncho
     ) {
         Ok(cert) => {
             let res_string = std::str::from_utf8(cert.subject.as_slice_less_safe());
-            println!("global yank {}", res_string.expect("FAIIIIILLLLL"));
+            println!("Attempting to parse subject before calling trust_anchor_from_cert() {}", res_string.expect("Unable to parse subject"));
             Ok(trust_anchor_from_cert(cert))
         },
         Err(Error::BadDER) => parse_cert_v1(cert_der).or(Err(Error::BadDER)),

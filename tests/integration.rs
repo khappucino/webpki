@@ -66,14 +66,13 @@ pub fn netflix() {
     let cody_cert = webpki::trust_anchor_util::cert_der_as_trust_anchor(untrusted::Input::from(ca)).unwrap();
     let res_string = std::str::from_utf8(cody_cert.subject);
     match res_string {
-        Ok(blah) => {
-            println!("mah blah {}", blah);
+        Ok(subject) => {
+            println!("Trusted Cert Subject {}", subject);
         },
         Err(err) => {
-            println!("errrrrrr {}", err);
+            println!("Fail Whale when trying to read Subject {}", err);
         }
     }
-    println!("cody_cert subject = {}", std::str::from_utf8(cody_cert.subject).unwrap());
 
     let anchors =
         vec![
