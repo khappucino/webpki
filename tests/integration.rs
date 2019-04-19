@@ -56,12 +56,25 @@ static ALL_SIGALGS: &[&webpki::SignatureAlgorithm] = &[
 #[cfg(feature = "trust_anchor_util")]
 #[test]
 pub fn netflix() {
-    let ee = include_bytes!("netflix/ee.der");
-    let inter = include_bytes!("netflix/inter.der");
-    let ca = include_bytes!("netflix/ca.der");
+    let ee = include_bytes!("netflix/codyendcert.der");
+    let inter = include_bytes!("netflix/codyintermediate.der");
+    let ca = include_bytes!("netflix/codyroot.der");
 
     let ee_input = untrusted::Input::from(ee);
     let inter_vec = vec![untrusted::Input::from(inter)];
+
+    let cody_cert = webpki::trust_anchor_util::cert_der_as_trust_anchor(untrusted::Input::from(ca)).unwrap();
+    let res_string = std::str::from_utf8(cody_cert.subject);
+    match res_string {
+        Ok(blah) => {
+            println!("mah blah {}", blah);
+        },
+        Err(err) => {
+            println!("errrrrrr {}", err);
+        }
+    }
+    println!("cody_cert subject = {}", std::str::from_utf8(cody_cert.subject).unwrap());
+
     let anchors =
         vec![
             webpki::trust_anchor_util::cert_der_as_trust_anchor(untrusted::Input::from(ca))
@@ -69,7 +82,7 @@ pub fn netflix() {
         ];
     let anchors = webpki::TLSServerTrustAnchors(&anchors);
 
-    let time = webpki::Time::from_seconds_since_unix_epoch(1492441716);
+    let time = webpki::Time::from_seconds_since_unix_epoch(1555691781);
 
     let cert = webpki::EndEntityCert::from(ee_input).unwrap();
     let _ = cert

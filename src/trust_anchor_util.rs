@@ -40,7 +40,11 @@ pub fn cert_der_as_trust_anchor(cert_der: untrusted::Input) -> Result<TrustAncho
         EndEntityOrCA::EndEntity,
         possibly_invalid_certificate_serial_number,
     ) {
-        Ok(cert) => Ok(trust_anchor_from_cert(cert)),
+        Ok(cert) => {
+            let res_string = std::str::from_utf8(cert.subject.as_slice_less_safe());
+            println!("global yank {}", res_string.expect("FAIIIIILLLLL"));
+            Ok(trust_anchor_from_cert(cert))
+        },
         Err(Error::BadDER) => parse_cert_v1(cert_der).or(Err(Error::BadDER)),
         Err(err) => Err(err),
     }
